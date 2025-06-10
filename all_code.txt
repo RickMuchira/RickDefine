@@ -1,0 +1,1279 @@
+----- /home/rick110/RickDrive/PortfolioPractice/RickDefine/components/Features.jsx -----
+"use client";
+
+import { useState, useRef } from "react";
+import { TiLocationArrow } from "react-icons/ti";
+
+export const BentoTilt = ({ children, className = "" }) => {
+  const [transformStyle, setTransformStyle] = useState("");
+  const itemRef = useRef(null);
+
+  const handleMouseMove = (event) => {
+    if (!itemRef.current) return;
+
+    const { left, top, width, height } =
+      itemRef.current.getBoundingClientRect();
+
+    const relativeX = (event.clientX - left) / width;
+    const relativeY = (event.clientY - top) / height;
+
+    const tiltX = (relativeY - 0.5) * 5;
+    const tiltY = (relativeX - 0.5) * -5;
+
+    const newTransform = `perspective(700px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(.95, .95, .95)`;
+    setTransformStyle(newTransform);
+  };
+
+  const handleMouseLeave = () => {
+    setTransformStyle("");
+  };
+
+  return (
+    <div
+      ref={itemRef}
+      className={className}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ transform: transformStyle }}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const BentoCard = ({ src, title, description, isComingSoon }) => {
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [hoverOpacity, setHoverOpacity] = useState(0);
+  const hoverButtonRef = useRef(null);
+
+  const handleMouseMove = (event) => {
+    if (!hoverButtonRef.current) return;
+    const rect = hoverButtonRef.current.getBoundingClientRect();
+
+    setCursorPosition({
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    });
+  };
+
+  const handleMouseEnter = () => setHoverOpacity(1);
+  const handleMouseLeave = () => setHoverOpacity(0);
+
+  return (
+    <div className="relative size-full">
+      <video
+        src={src}
+        loop
+        muted
+        autoPlay
+        className="absolute left-0 top-0 size-full object-cover object-center"
+      />
+      <div className="relative z-10 flex size-full flex-col justify-between p-5 text-blue-50">
+        <div>
+          <h1 className="bento-title special-font">{title}</h1>
+          {description && (
+            <p className="mt-3 max-w-64 text-xs md:text-base">{description}</p>
+          )}
+        </div>
+
+        {isComingSoon && (
+          <div
+            ref={hoverButtonRef}
+            onMouseMove={handleMouseMove}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            className="border-hsla relative flex w-fit cursor-pointer items-center gap-1 overflow-hidden rounded-full bg-black px-5 py-2 text-xs uppercase text-white/20"
+          >
+            {/* Radial gradient hover effect */}
+            <div
+              className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"
+              style={{
+                opacity: hoverOpacity,
+                background: `radial-gradient(100px circle at ${cursorPosition.x}px ${cursorPosition.y}px, #656fe288, #00000026)`,
+              }}
+            />
+            <TiLocationArrow className="relative z-20" />
+            <p className="relative z-20">coming soon</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const Features = () => (
+  <section className="bg-black pb-52">
+    <div className="container mx-auto px-3 md:px-10">
+      <div className="px-5 py-32">
+        <p className="font-circular-web text-lg text-blue-50">
+          Into the Metagame Layer
+        </p>
+        <p className="max-w-md font-circular-web text-lg text-blue-50 opacity-50">
+          Immerse yourself in a rich and ever-expanding universe where a vibrant
+          array of products converge into an interconnected overlay experience
+          on your world.
+        </p>
+      </div>
+
+      <BentoTilt className="border-hsla relative mb-7 h-96 w-full overflow-hidden rounded-md md:h-[65vh]">
+        <BentoCard
+          src="videos/feature-1.mp4"
+          title={
+            <>
+              radia<b>n</b>t
+            </>
+          }
+          description="A cross-platform metagame app, turning your activities across Web2 and Web3 games into a rewarding adventure."
+          isComingSoon
+        />
+      </BentoTilt>
+
+      <div className="grid h-[135vh] w-full grid-cols-2 grid-rows-3 gap-7">
+        <BentoTilt className="bento-tilt_1 row-span-1 md:col-span-1 md:row-span-2">
+          <BentoCard
+            src="videos/feature-2.mp4"
+            title={
+              <>
+                zig<b>m</b>a
+              </>
+            }
+            description="An anime and gaming-inspired NFT collection - the IP primed for expansion."
+            isComingSoon
+          />
+        </BentoTilt>
+
+        <BentoTilt className="bento-tilt_1 row-span-1 ms-32 md:col-span-1 md:ms-0">
+          <BentoCard
+            src="videos/feature-3.mp4"
+            title={
+              <>
+                n<b>e</b>xus
+              </>
+            }
+            description="A gamified social hub, adding a new dimension of play to social interaction for Web3 communities."
+            isComingSoon
+          />
+        </BentoTilt>
+
+        <BentoTilt className="bento-tilt_1 me-14 md:col-span-1 md:me-0">
+          <BentoCard
+            src="videos/feature-4.mp4"
+            title={
+              <>
+                az<b>u</b>l
+              </>
+            }
+            description="A cross-world AI Agent - elevating your gameplay to be more fun and productive."
+            isComingSoon
+          />
+        </BentoTilt>
+
+        <BentoTilt className="bento-tilt_2">
+          <div className="flex size-full flex-col justify-between bg-violet-300 p-5">
+            <h1 className="bento-title special-font max-w-64 text-black">
+              M<b>o</b>re co<b>m</b>ing s<b>o</b>on.
+            </h1>
+
+            <TiLocationArrow className="m-5 scale-[5] self-end" />
+          </div>
+        </BentoTilt>
+
+        <BentoTilt className="bento-tilt_2">
+          <video
+            src="videos/feature-5.mp4"
+            loop
+            muted
+            autoPlay
+            className="size-full object-cover object-center"
+          />
+        </BentoTilt>
+      </div>
+    </div>
+  </section>
+);
+
+export default Features;
+
+----- /home/rick110/RickDrive/PortfolioPractice/RickDefine/components/Story.jsx -----
+"use client";
+import gsap from "gsap";
+import { useRef } from "react";
+
+import Button from "./Button";
+import AnimatedTitle from "./AnimatedTitle";
+
+const FloatingImage = () => {
+  const frameRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    const { clientX, clientY } = e;
+    const element = frameRef.current;
+
+    if (!element) return;
+
+    const rect = element.getBoundingClientRect();
+    const xPos = clientX - rect.left;
+    const yPos = clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((yPos - centerY) / centerY) * -10;
+    const rotateY = ((xPos - centerX) / centerX) * 10;
+
+    gsap.to(element, {
+      duration: 0.3,
+      rotateX,
+      rotateY,
+      transformPerspective: 500,
+      ease: "power1.inOut",
+    });
+  };
+
+  const handleMouseLeave = () => {
+    const element = frameRef.current;
+
+    if (element) {
+      gsap.to(element, {
+        duration: 0.3,
+        rotateX: 0,
+        rotateY: 0,
+        ease: "power1.inOut",
+      });
+    }
+  };
+
+  return (
+    <div id="story" className="min-h-dvh w-screen bg-black text-blue-50">
+      <div className="flex size-full flex-col items-center py-10 pb-24">
+        <p className="font-general text-sm uppercase md:text-[10px]">
+          the multiversal ip world
+        </p>
+
+        <div className="relative size-full">
+          <AnimatedTitle
+            title="the st<b>o</b>ry of <br /> a hidden real<b>m</b>"
+            containerClass="mt-5 pointer-events-none mix-blend-difference relative z-10"
+          />
+
+          <div className="story-img-container">
+            <div className="story-img-mask">
+              <div className="story-img-content">
+                <img
+                  ref={frameRef}
+                  onMouseMove={handleMouseMove}
+                  onMouseLeave={handleMouseLeave}
+                  onMouseUp={handleMouseLeave}
+                  onMouseEnter={handleMouseLeave}
+                  src="/img/entrance.webp"
+                  alt="entrance.webp"
+                  className="object-contain"
+                />
+              </div>
+            </div>
+
+            {/* for the rounded corner */}
+            <svg
+              className="invisible absolute size-0"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <filter id="flt_tag">
+                  <feGaussianBlur
+                    in="SourceGraphic"
+                    stdDeviation="8"
+                    result="blur"
+                  />
+                  <feColorMatrix
+                    in="blur"
+                    mode="matrix"
+                    values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9"
+                    result="flt_tag"
+                  />
+                  <feComposite
+                    in="SourceGraphic"
+                    in2="flt_tag"
+                    operator="atop"
+                  />
+                </filter>
+              </defs>
+            </svg>
+          </div>
+        </div>
+
+        <div className="-mt-80 flex w-full justify-center md:-mt-64 md:me-44 md:justify-end">
+          <div className="flex h-full w-fit flex-col items-center md:items-start">
+            <p className="mt-3 max-w-sm text-center font-circular-web text-violet-50 md:text-start">
+              Where realms converge, lies RICKY and the boundless pillar.
+              Discover its secrets and shape your fate amidst infinite
+              opportunities.
+            </p>
+
+            <Button
+              id="realm-btn"
+              title="discover prologue"
+              containerClass="mt-5"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default FloatingImage;
+
+----- /home/rick110/RickDrive/PortfolioPractice/RickDefine/components/Button.tsx -----
+"use client";
+
+import clsx from "clsx";
+import { ReactNode } from "react";
+
+interface ButtonProps {
+  id: string;
+  title: string;
+  rightIcon?: ReactNode; // ✅ optional
+  leftIcon?: ReactNode;  // ✅ optional
+  containerClass?: string;
+}
+
+const Button = ({ id, title, rightIcon, leftIcon, containerClass }: ButtonProps) => {
+  return (
+    <button
+      id={id}
+      className={clsx(
+        "group relative z-10 w-fit cursor-pointer overflow-hidden rounded-full bg-violet-50 px-7 py-3 text-black",
+        containerClass
+      )}
+    >
+      {leftIcon}
+
+      <span className="relative inline-flex overflow-hidden font-general text-xs uppercase">
+        <div className="translate-y-0 skew-y-0 transition duration-500 group-hover:translate-y-[-160%] group-hover:skew-y-12">
+          {title}
+        </div>
+        <div className="absolute translate-y-[164%] skew-y-12 transition duration-500 group-hover:translate-y-0 group-hover:skew-y-0">
+          {title}
+        </div>
+      </span>
+
+      {rightIcon}
+    </button>
+  );
+};
+
+export default Button;
+
+----- /home/rick110/RickDrive/PortfolioPractice/RickDefine/components/VideoPreview.jsx -----
+import { gsap } from "gsap";
+import { useState, useRef, useEffect } from "react";
+
+export const VideoPreview = ({ children }) => {
+  const [isHovering, setIsHovering] = useState(false);
+
+  const sectionRef = useRef(null); // Reference for the container section
+  const contentRef = useRef(null); // Reference for the inner content
+
+  // Handles mouse movement over the container
+  const handleMouseMove = ({ clientX, clientY, currentTarget }) => {
+    const rect = currentTarget.getBoundingClientRect(); // Get dimensions of the container
+
+    const xOffset = clientX - (rect.left + rect.width / 2); // Calculate X offset
+    const yOffset = clientY - (rect.top + rect.height / 2); // Calculate Y offset
+
+    if (isHovering) {
+      // Move the container slightly in the direction of the cursor
+      gsap.to(sectionRef.current, {
+        x: xOffset,
+        y: yOffset,
+        rotationY: xOffset / 2, // Add 3D rotation effect
+        rotationX: -yOffset / 2,
+        transformPerspective: 500, // Perspective for realistic 3D effect
+        duration: 1,
+        ease: "power1.out",
+      });
+
+      // Move the inner content in the opposite direction for a parallax effect
+      gsap.to(contentRef.current, {
+        x: -xOffset,
+        y: -yOffset,
+        duration: 1,
+        ease: "power1.out",
+      });
+    }
+  };
+
+  useEffect(() => {
+    // Reset the position of the content when hover ends
+    if (!isHovering) {
+      gsap.to(sectionRef.current, {
+        x: 0,
+        y: 0,
+        rotationY: 0,
+        rotationX: 0,
+        duration: 1,
+        ease: "power1.out",
+      });
+
+      gsap.to(contentRef.current, {
+        x: 0,
+        y: 0,
+        duration: 1,
+        ease: "power1.out",
+      });
+    }
+  }, [isHovering]);
+
+  return (
+    <section
+      ref={sectionRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      className="absolute z-50 size-full overflow-hidden rounded-lg"
+      style={{
+        perspective: "500px",
+      }}
+    >
+      <div
+        ref={contentRef}
+        className="origin-center rounded-lg"
+        style={{
+          transformStyle: "preserve-3d",
+        }}
+      >
+        {children}
+      </div>
+    </section>
+  );
+};
+
+export default VideoPreview;
+
+----- /home/rick110/RickDrive/PortfolioPractice/RickDefine/components/Navbar.jsx -----
+"use client";
+
+import clsx from "clsx";
+import gsap from "gsap";
+import { useWindowScroll } from "react-use";
+import { useEffect, useRef, useState } from "react";
+import { TiLocationArrow } from "react-icons/ti";
+
+import Button from "./Button";
+
+const navItems = ["Nexus", "Vault", "Prologue", "About", "Contact"];
+
+const NavBar = () => {
+  // State for toggling audio and visual indicator
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [isIndicatorActive, setIsIndicatorActive] = useState(false);
+
+  // Refs for audio and navigation container
+  const audioElementRef = useRef(null);
+  const navContainerRef = useRef(null);
+
+  const { y: currentScrollY } = useWindowScroll();
+  const [isNavVisible, setIsNavVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  // Toggle audio and visual indicator
+  const toggleAudioIndicator = () => {
+    setIsAudioPlaying((prev) => !prev);
+    setIsIndicatorActive((prev) => !prev);
+  };
+
+  // Manage audio playback
+  useEffect(() => {
+    if (isAudioPlaying) {
+      audioElementRef.current.play();
+    } else {
+      audioElementRef.current.pause();
+    }
+  }, [isAudioPlaying]);
+
+  useEffect(() => {
+    if (currentScrollY === 0) {
+      // Topmost position: show navbar without floating-nav
+      setIsNavVisible(true);
+      navContainerRef.current.classList.remove("floating-nav");
+    } else if (currentScrollY > lastScrollY) {
+      // Scrolling down: hide navbar and apply floating-nav
+      setIsNavVisible(false);
+      navContainerRef.current.classList.add("floating-nav");
+    } else if (currentScrollY < lastScrollY) {
+      // Scrolling up: show navbar with floating-nav
+      setIsNavVisible(true);
+      navContainerRef.current.classList.add("floating-nav");
+    }
+
+    setLastScrollY(currentScrollY);
+  }, [currentScrollY, lastScrollY]);
+
+  useEffect(() => {
+    gsap.to(navContainerRef.current, {
+      y: isNavVisible ? 0 : -100,
+      opacity: isNavVisible ? 1 : 0,
+      duration: 0.2,
+    });
+  }, [isNavVisible]);
+
+  return (
+    <div
+      ref={navContainerRef}
+      className="fixed inset-x-0 top-4 z-50 h-16 border-none transition-all duration-700 sm:inset-x-6"
+    >
+      <header className="absolute top-1/2 w-full -translate-y-1/2">
+        <nav className="flex size-full items-center justify-between p-4">
+          {/* Logo and Product button */}
+          <div className="flex items-center gap-7">
+            <img src="/img/logo.png" alt="logo" className="w-10" />
+
+            <Button
+              id="product-button"
+              title="Products"
+              rightIcon={<TiLocationArrow />}
+              containerClass="bg-blue-50 md:flex hidden items-center justify-center gap-1"
+            />
+          </div>
+
+          {/* Navigation Links and Audio Button */}
+          <div className="flex h-full items-center">
+            <div className="hidden md:block">
+              {navItems.map((item, index) => (
+                <a
+                  key={index}
+                  href={`#${item.toLowerCase()}`}
+                  className="nav-hover-btn"
+                >
+                  {item}
+                </a>
+              ))}
+            </div>
+
+            <button
+              onClick={toggleAudioIndicator}
+              className="ml-10 flex items-center space-x-0.5"
+            >
+              <audio
+                ref={audioElementRef}
+                className="hidden"
+                src="/audio/loop.mp3"
+                loop
+              />
+              {[1, 2, 3, 4].map((bar) => (
+                <div
+                  key={bar}
+                  className={clsx("indicator-line", {
+                    active: isIndicatorActive,
+                  })}
+                  style={{
+                    animationDelay: `${bar * 0.1}s`,
+                  }}
+                />
+              ))}
+            </button>
+          </div>
+        </nav>
+      </header>
+    </div>
+  );
+};
+
+export default NavBar;
+
+----- /home/rick110/RickDrive/PortfolioPractice/RickDefine/components/AnimatedTitle.jsx -----
+import { gsap } from "gsap";
+import { useEffect, useRef } from "react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import clsx from "clsx";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const AnimatedTitle = ({ title, containerClass }) => {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const titleAnimation = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "100 bottom",
+          end: "center bottom",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      titleAnimation.to(
+        ".animated-word",
+        {
+          opacity: 1,
+          transform: "translate3d(0, 0, 0) rotateY(0deg) rotateX(0deg)",
+          ease: "power2.inOut",
+          stagger: 0.02,
+        },
+        0
+      );
+    }, containerRef);
+
+    return () => ctx.revert(); // Clean up on unmount
+  }, []);
+
+  return (
+    <div ref={containerRef} className={clsx("animated-title", containerClass)}>
+      {title.split("<br />").map((line, index) => (
+        <div
+          key={index}
+          className="flex-center max-w-full flex-wrap gap-2 px-10 md:gap-3"
+        >
+          {line.split(" ").map((word, idx) => (
+            <span
+              key={idx}
+              className="animated-word"
+              dangerouslySetInnerHTML={{ __html: word }}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default AnimatedTitle;
+
+----- /home/rick110/RickDrive/PortfolioPractice/RickDefine/components/About.jsx -----
+"use client";
+
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/all";
+
+import AnimatedTitle from "./AnimatedTitle";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const About = () => {
+  useGSAP(() => {
+    const clipAnimation = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#clip",
+        start: "center center",
+        end: "+=800 center",
+        scrub: 0.5,
+        pin: true,
+        pinSpacing: true,
+      },
+    });
+
+    clipAnimation.to(".mask-clip-path", {
+      width: "100vw",
+      height: "100vh",
+      borderRadius: 0,
+    });
+  });
+
+  return (
+    <div id="about" className="min-h-screen w-screen">
+      <div className="relative mb-8 mt-36 flex flex-col items-center gap-5">
+        <p className="font-general text-sm uppercase md:text-[10px]">
+          Welcome to RICKY
+        </p>
+
+        <AnimatedTitle
+          title="Disc<b>o</b>ver the world's <br /> largest shared <b>a</b>dventure"
+          containerClass="mt-5 !text-black text-center"
+        />
+
+        <div className="about-subtext">
+          <p>The Game of Games begins—your life, now an epic MMORPG</p>
+          <p className="text-gray-500">
+            Rick unites every player from countless games and platforms, both
+            digital and physical, into a unified Play Economy
+          </p>
+        </div>
+      </div>
+
+      <div className="h-dvh w-screen" id="clip">
+        <div className="mask-clip-path about-image">
+          <img
+            src="img/about.webp"
+            alt="Background"
+            className="absolute left-0 top-0 size-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default About;
+
+----- /home/rick110/RickDrive/PortfolioPractice/RickDefine/components/Footer.jsx -----
+"use client";
+
+import { FaDiscord, FaTwitter, FaYoutube, FaMedium } from "react-icons/fa";
+
+const socialLinks = [
+  { href: "https://discord.com", icon: <FaDiscord /> },
+  { href: "https://twitter.com", icon: <FaTwitter /> },
+  { href: "https://youtube.com", icon: <FaYoutube /> },
+  { href: "https://medium.com", icon: <FaMedium /> },
+];
+
+const Footer = () => {
+  return (
+    <footer className="w-screen bg-[#5542ff] py-4 text-black">
+      <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 md:flex-row">
+        <p className="text-center text-sm font-light md:text-left">
+          ©RICK 2024. All rights reserved
+        </p>
+
+        <div className="flex justify-center gap-4  md:justify-start">
+          {socialLinks.map((link, index) => (
+            <a
+              key={index}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-black transition-colors duration-500 ease-in-out hover:text-white"
+            >
+              {link.icon}
+            </a>
+          ))}
+        </div>
+
+        <a
+          href="#privacy-policy"
+          className="text-center text-sm font-light hover:underline md:text-right"
+        >
+          Privacy Policy
+        </a>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
+
+----- /home/rick110/RickDrive/PortfolioPractice/RickDefine/components/Contact.jsx -----
+"use client";
+
+import AnimatedTitle from "./AnimatedTitle";
+import Button from "./Button";
+
+const ImageClipBox = ({ src, clipClass }) => (
+  <div className={clipClass}>
+    <img src={src} />
+  </div>
+);
+
+const Contact = () => {
+  return (
+    <div id="contact" className="my-20 min-h-96 w-screen  px-10">
+      <div className="relative rounded-lg bg-black py-24 text-blue-50 sm:overflow-hidden">
+        <div className="absolute -left-20 top-0 hidden h-full w-72 overflow-hidden sm:block lg:left-20 lg:w-96">
+          <ImageClipBox
+            src="/img/contact-1.webp"
+            clipClass="contact-clip-path-1"
+          />
+          <ImageClipBox
+            src="/img/contact-2.webp"
+            clipClass="contact-clip-path-2 lg:translate-y-40 translate-y-60"
+          />
+        </div>
+
+        <div className="absolute -top-40 left-20 w-60 sm:top-1/2 md:left-auto md:right-10 lg:top-20 lg:w-80">
+          <ImageClipBox
+            src="/img/swordman-partial.webp"
+            clipClass="absolute md:scale-125"
+          />
+          <ImageClipBox
+            src="/img/swordman.webp"
+            clipClass="sword-man-clip-path md:scale-125"
+          />
+        </div>
+
+        <div className="flex flex-col items-center text-center">
+          <p className="mb-10 font-general text-[10px] uppercase">
+            Join RICKY
+          </p>
+
+          <AnimatedTitle
+            title="let&#39;s b<b>u</b>ild the <br /> new era of <br /> g<b>a</b>ming t<b>o</b>gether."
+            className="special-font !md:text-[6.2rem] w-full font-zentry !text-5xl !font-black !leading-[.9]"
+          />
+
+          <Button title="contact us" containerClass="mt-10 cursor-pointer" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Contact;
+
+----- /home/rick110/RickDrive/PortfolioPractice/RickDefine/components/Hero.tsx -----
+"use client";
+
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/all";
+import { TiLocationArrow } from "react-icons/ti";
+import { useEffect, useRef, useState } from "react";
+
+import Button from "./Button";
+import VideoPreview from "./VideoPreview";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const Hero = () => {
+  const [currentIndex, setCurrentIndex] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const totalVideos = 4;
+
+  const previewRef = useRef<HTMLVideoElement>(null);
+  const mainRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleMainVideoEnded = () => {
+    setCurrentIndex((prev) => (prev % totalVideos) + 1);
+  };
+
+  useGSAP(() => {
+    gsap.set("#video-frame", {
+      clipPath: "polygon(14% 0, 72% 0, 88% 90%, 0 95%)",
+      borderRadius: "0% 0% 40% 10%",
+    });
+    gsap.from("#video-frame", {
+      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+      borderRadius: "0% 0% 0% 0%",
+      ease: "power1.inOut",
+      scrollTrigger: {
+        trigger: "#video-frame",
+        start: "center center",
+        end: "bottom center",
+        scrub: true,
+      },
+    });
+  });
+
+  const getVideoSrc = (index: number) => `videos/hero-${index}.mp4`;
+
+  return (
+    <div className="relative h-dvh w-screen overflow-x-hidden">
+      {loading && (
+        <div className="flex-center absolute z-[100] h-dvh w-screen overflow-hidden bg-violet-50">
+          <div className="three-body">
+            <div className="three-body__dot"></div>
+            <div className="three-body__dot"></div>
+            <div className="three-body__dot"></div>
+          </div>
+        </div>
+      )}
+
+      <div
+        id="video-frame"
+        className="relative z-10 h-dvh w-screen overflow-hidden rounded-lg bg-blue-75"
+      >
+        <div className="mask-clip-path absolute-center absolute z-50 size-64 cursor-pointer overflow-hidden rounded-lg">
+          <VideoPreview>
+            <div
+              onClick={() => setCurrentIndex((prev) => (prev % totalVideos) + 1)}
+              className="origin-center scale-50 opacity-0 transition-all duration-500 ease-in hover:scale-100 hover:opacity-100"
+            >
+              <video
+                ref={previewRef}
+                src={getVideoSrc((currentIndex % totalVideos) + 1)}
+                loop
+                muted
+                id="current-video"
+                className="size-64 origin-center scale-150 object-cover object-center"
+              />
+            </div>
+          </VideoPreview>
+        </div>
+
+        <video
+          ref={mainRef}
+          src={getVideoSrc(currentIndex)}
+          autoPlay
+          muted
+          onEnded={handleMainVideoEnded}
+          className="absolute left-0 top-0 size-full object-cover object-center"
+        />
+
+        <h1 className="special-font hero-heading absolute bottom-5 right-5 z-40 text-blue-75">
+          G<b>A</b>MING
+        </h1>
+
+        <div className="absolute left-0 top-0 z-40 size-full">
+          <div className="mt-24 px-5 sm:px-10">
+            <h1 className="special-font hero-heading text-blue-100">
+              <b>R</b>ick<b>d</b>efi<b>n</b>e
+            </h1>
+
+            <p className="mb-5 max-w-64 font-robert-regular text-blue-100">
+              Enter the Metagame Layer <br /> Unleash the Play Economy
+            </p>
+
+            <Button
+              id="watch-trailer"
+              title="Watch trailer"
+              leftIcon={<TiLocationArrow />}
+              rightIcon={null}
+              containerClass="bg-yellow-300 flex-center gap-1"
+            />
+          </div>
+        </div>
+      </div>
+
+      <h1 className="special-font hero-heading absolute bottom-5 right-5 text-black">
+        G<b>R</b>MING
+      </h1>
+    </div>
+  );
+};
+
+export default Hero;
+
+----- /home/rick110/RickDrive/PortfolioPractice/RickDefine/app/globals.css -----
+@import url("https://fonts.cdnfonts.com/css/general-sans");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  width: 100dvw;
+  overflow-x: hidden;
+  background-color: #dfdff0;
+  font-family: "General Sans", sans-serif;
+}
+
+@layer base {
+  @font-face {
+    font-family: "circular-web";
+    src: url("/fonts/circularweb-book.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "general";
+    src: url("/fonts/general.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "robert-medium";
+    src: url("/fonts/robert-medium.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "robert-regular";
+    src: url("/fonts/robert-regular.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "zentry";
+    src: url("/fonts/zentry-regular.woff2") format("woff2");
+  }
+}
+
+@layer utilities {
+  .border-hsla {
+    @apply border border-white/20;
+  }
+
+  .nav-hover-btn {
+    @apply relative ms-10 font-general text-xs uppercase text-blue-50 after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-full after:origin-bottom-right after:scale-x-0 after:bg-neutral-800 after:transition-transform after:duration-300 after:ease-[cubic-bezier(0.65_0.05_0.36_1)] hover:after:origin-bottom-left hover:after:scale-x-100 dark:after:bg-white cursor-pointer;
+  }
+
+  .floating-nav {
+    @apply bg-black rounded-lg border;
+  }
+
+  .absolute-center {
+    @apply absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%];
+  }
+
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+
+  .mask-clip-path {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .special-font b {
+    font-family: "Zentry";
+    font-feature-settings: "ss01" on;
+  }
+
+  .hero-heading {
+    @apply uppercase font-zentry font-black text-5xl sm:right-10 sm:text-7xl md:text-9xl lg:text-[12rem];
+  }
+
+  .about-subtext {
+    /* Changed here from font-circular-web to font-circular */
+    @apply absolute bottom-[-80dvh] left-1/2 w-full max-w-96 -translate-x-1/2 text-center font-circular text-lg md:max-w-[34rem];
+  }
+
+  .about-image {
+    @apply absolute left-1/2 top-0 z-20 h-[60vh] w-96 origin-center -translate-x-1/2 overflow-hidden rounded-3xl md:w-[30vw];
+  }
+
+  .animated-title {
+    @apply flex flex-col gap-1 text-7xl uppercase leading-[.8] text-white sm:px-32 md:text-[6rem];
+  }
+
+  .animated-word {
+    @apply special-font font-zentry font-black opacity-0;
+    transform: translate3d(10px, 51px, -60px) rotateY(60deg) rotateX(-40deg);
+    transform-origin: 50% 50% -150px !important;
+    will-change: opacity, transform;
+  }
+
+  .bento-tilt_1 {
+    @apply relative border-hsla col-span-2 overflow-hidden rounded-md transition-transform duration-300 ease-out;
+  }
+
+  .bento-tilt_2 {
+    @apply relative col-span-1 row-span-1 overflow-hidden rounded-md transition-transform duration-300 ease-out;
+  }
+
+  .bento-title {
+    @apply uppercase md:text-6xl text-4xl font-black font-zentry;
+  }
+
+  .story-img-container {
+    @apply relative md:h-dvh h-[90vh] w-full;
+    filter: url("#flt_tag");
+  }
+
+  .story-img-mask {
+    @apply absolute left-0 top-0 size-full overflow-hidden md:left-[20%] md:top-[-10%] md:size-4/5;
+    clip-path: polygon(4% 0, 83% 21%, 100% 73%, 0% 100%);
+  }
+
+  .story-img-content {
+    @apply absolute w-full md:h-dvh h-[50dvh] opacity-100 left-10 top-16 md:left-0 md:top-10 lg:left-[-300px] lg:top-[-100px];
+    transform: translate3d(0, 0, 0) rotateX(0) rotateY(0) rotateZ(0) scale(1);
+  }
+
+  .gallery-img-container {
+    @apply size-64 overflow-hidden bg-violet-300;
+  }
+
+  .gallery-img {
+    @apply size-full bg-cover;
+  }
+
+  .gallery-img-4 {
+    @apply sm:size-80 md:h-96 md:w-[25rem] rounded-lg;
+  }
+
+  .sword-man-clip-path {
+    clip-path: polygon(16% 0, 89% 15%, 75% 100%, 0 97%);
+  }
+
+  .contact-clip-path-1 {
+    clip-path: polygon(25% 0%, 74% 0, 69% 64%, 34% 73%);
+  }
+
+  .contact-clip-path-2 {
+    clip-path: polygon(29% 15%, 85% 30%, 50% 100%, 10% 64%);
+  }
+}
+
+.indicator-line {
+  @apply h-1 w-px rounded-full bg-white transition-all duration-200 ease-in-out;
+}
+
+.indicator-line.active {
+  animation: indicator-line 0.5s ease infinite;
+  animation-delay: calc(var(--animation-order) * 0.1s);
+}
+
+@keyframes indicator-line {
+  0% {
+    height: 4px;
+    transform: translateY(-0px);
+  }
+  50% {
+    height: 16px;
+    transform: translateY(-4px);
+  }
+  100% {
+    height: 4px;
+    transform: translateY(-0px);
+  }
+}
+
+/* From Uiverse.io by G4b413l */
+/* https://uiverse.io/G4b413l/tidy-walrus-92 */
+.three-body {
+  --uib-size: 35px;
+  --uib-speed: 0.8s;
+  --uib-color: #5d3fd3;
+  position: relative;
+  display: inline-block;
+  height: var(--uib-size);
+  width: var(--uib-size);
+  animation: spin78236 calc(var(--uib-speed) * 2.5) infinite linear;
+}
+
+.three-body__dot {
+  position: absolute;
+  height: 100%;
+  width: 30%;
+}
+
+.three-body__dot:after {
+  content: "";
+  position: absolute;
+  height: 0%;
+  width: 100%;
+  padding-bottom: 100%;
+  background-color: var(--uib-color);
+  border-radius: 50%;
+}
+
+.three-body__dot:nth-child(1) {
+  bottom: 5%;
+  left: 0;
+  transform: rotate(60deg);
+  transform-origin: 50% 85%;
+}
+
+.three-body__dot:nth-child(1)::after {
+  bottom: 0;
+  left: 0;
+  animation: wobble1 var(--uib-speed) infinite ease-in-out;
+  animation-delay: calc(var(--uib-speed) * -0.3);
+}
+
+.three-body__dot:nth-child(2) {
+  bottom: 5%;
+  right: 0;
+  transform: rotate(-60deg);
+  transform-origin: 50% 85%;
+}
+
+.three-body__dot:nth-child(2)::after {
+  bottom: 0;
+  left: 0;
+  animation: wobble1 var(--uib-speed) infinite calc(var(--uib-speed) * -0.15)
+    ease-in-out;
+}
+
+.three-body__dot:nth-child(3) {
+  bottom: -5%;
+  left: 0;
+  transform: translateX(116.666%);
+}
+
+.three-body__dot:nth-child(3)::after {
+  top: 0;
+  left: 0;
+  animation: wobble2 var(--uib-speed) infinite ease-in-out;
+}
+
+@keyframes spin78236 {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wobble1 {
+  0%,
+  100% {
+    transform: translateY(0%) scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateY(-66%) scale(0.65);
+    opacity: 0.8;
+  }
+}
+
+@keyframes wobble2 {
+  0%,
+  100% {
+    transform: translateY(0%) scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateY(66%) scale(0.65);
+    opacity: 0.8;
+  }
+}
+
+----- /home/rick110/RickDrive/PortfolioPractice/RickDefine/app/layout.tsx -----
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "Create Next App",
+  description: "Generated by create next app",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {children}
+      </body>
+    </html>
+  );
+}
+
+----- /home/rick110/RickDrive/PortfolioPractice/RickDefine/app/page.tsx -----
+import Hero from "@/components/Hero";
+import About from "@/components/About"; // ✅ Make sure this file exists
+import Features from "@/components/Features"; // ✅ Make sure this file exists
+import Navbar from "@/components/Navbar"; // ✅ Make sure this file exists
+import Story from "@/components/Story"; // ✅ Make sure this file exists
+import Contact from "@/components/Contact"; // ✅ Make sure this file exists
+import Footer from "@/components/Footer"; // ✅ Make sure this file exists
+import React from "react";
+export default function HomePage() {
+  return (
+    <main>
+      <Navbar />
+      <Hero />
+      <About />
+      <Features />
+      <Story />
+      <Contact />
+      <Footer />
+    </main>
+  );
+}
+
